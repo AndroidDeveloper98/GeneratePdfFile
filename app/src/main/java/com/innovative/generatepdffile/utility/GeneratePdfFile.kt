@@ -16,7 +16,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 
 class GeneratePdfFile(private val mContext: Context) {
 
@@ -27,9 +26,8 @@ class GeneratePdfFile(private val mContext: Context) {
     private var verticallySpace = 100f
     private var listVerticallyWidth = 100f
 
-
-    private fun getPdfPages(itemPerPage: Int, listSize : Int) : Int{
-       return if (listSize > itemPerPage) {
+    private fun getPdfPages(itemPerPage: Int, listSize: Int): Int {
+        return if (listSize > itemPerPage) {
             if (listSize % itemPerPage > 0) {
                 listSize / itemPerPage + 1
             } else {
@@ -45,17 +43,33 @@ class GeneratePdfFile(private val mContext: Context) {
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun createReportFile(cellHeight : Int,inspectionList : ArrayList<Inspection>,fileName : String) {
+    fun createReportFile(
+        cellHeight: Int,
+        inspectionList: ArrayList<Inspection>,
+        fileName: String,
+        isCoverPage: Boolean
+    ) {
         val pdfDocument = PdfDocument()
-        val itemPerPage = 1000/cellHeight
-        val pdfPageSize = getPdfPages(itemPerPage,inspectionList.size)
-        Log.d("itemPerPage","---$itemPerPage")
-        Log.d("pdfPageSize","---$pdfPageSize")
-        for (i in 1 .. pdfPageSize) {
+        val itemPerPage = 1000 / cellHeight
+        var isCoverPage = isCoverPage
+        var pdfPageSize = getPdfPages(itemPerPage, inspectionList.size)
+        if (isCoverPage) {
+            pdfPageSize += 1
+        }
+        Log.d("itemPerPage", "---$itemPerPage")
+        Log.d("pdfPageSize", "---$pdfPageSize")
+        for (i in 1..pdfPageSize) {
             val myPageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, i).create()
             val myPage = pdfDocument.startPage(myPageInfo)
             val canvas = myPage.canvas
-            drawTextInCenter(canvas, "Generate PDF")
+            drawPageNumber(canvas, i, pdfPageSize)
+            if (isCoverPage) {
+                generateCoverPage(canvas)
+                isCoverPage = false
+            } else {
+                drawTextInCenter(canvas, "Generate PDF")
+            }
+            drawFooterText(canvas, "@2022 Inspection Audit")
             pdfDocument.finishPage(myPage)
         }
         val formattedDate = SimpleDateFormat("dd-MM-yyyy HH_mm_ss")
@@ -79,6 +93,10 @@ class GeneratePdfFile(private val mContext: Context) {
         pdfDocument.close()
     }
 
+    private fun generateCoverPage(canvas: Canvas) {
+        drawTextInCenter(canvas, "Cover Page")
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun createPdfFile() {
         val pdfDocument = PdfDocument()
@@ -94,7 +112,14 @@ class GeneratePdfFile(private val mContext: Context) {
             100
         )
         verticallySpace += 160
-        drawCircleWithText(canvas,(canvas.width/2).toFloat(),verticallySpace,"1",Color.RED,32f)
+        drawCircleWithText(
+            canvas,
+            (canvas.width / 2).toFloat(),
+            verticallySpace,
+            "1",
+            Color.RED,
+            32f
+        )
         pdfDocument.finishPage(myPage)
         val formattedDate = SimpleDateFormat("dd-MM-yyyy HH_mm_ss")
         val date = Date()
@@ -150,13 +175,37 @@ class GeneratePdfFile(private val mContext: Context) {
 
     private fun drawTextInCenter(
         canvas: Canvas,
-        text: String
+        text: String,
+        textSize: Float = 16f
     ) {
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
-        paint.textSize = 18f
+        paint.textSize = textSize
         paint.color = ContextCompat.getColor(mContext, R.color.black)
         paint.textAlign = Paint.Align.CENTER
         canvas.drawText(text, (canvas.width / 2).toFloat(), verticallySpace, paint)
+    }
+
+    private fun drawPageNumber(
+        canvas: Canvas,
+        pageNumber: Int,
+        totalPage: Int
+    ) {
+        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        paint.textSize = 16f
+        paint.color = ContextCompat.getColor(mContext, R.color.black)
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText("$pageNumber of $totalPage", 80f, 40f, paint)
+    }
+
+    private fun drawFooterText(
+        canvas: Canvas,
+        text: String
+    ) {
+        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        paint.textSize = 14f
+        paint.color = ContextCompat.getColor(mContext, R.color.black)
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText(text, (canvas.width / 2).toFloat(), 1080f, paint)
     }
 
     private fun drawTextInStart(
@@ -199,7 +248,14 @@ class GeneratePdfFile(private val mContext: Context) {
         )
     }
 
-    private fun drawCircleWithText(canvas: Canvas, xAxis: Float, yAxis: Float,text: String,circleColor : Int,radius : Float) {
+    private fun drawCircleWithText(
+        canvas: Canvas,
+        xAxis: Float,
+        yAxis: Float,
+        text: String,
+        circleColor: Int,
+        radius: Float
+    ) {
         val bounds = Rect()
         val circlePaint = Paint()
         circlePaint.color = circleColor
@@ -215,7 +271,7 @@ class GeneratePdfFile(private val mContext: Context) {
         paint.textSize = 24f
         paint.color = ContextCompat.getColor(mContext, R.color.black)
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText(text, xAxis, yAxis+8, paint)
+        canvas.drawText(text, xAxis, yAxis + 8, paint)
     }
 
 }

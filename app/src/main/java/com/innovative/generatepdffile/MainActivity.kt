@@ -28,27 +28,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeSetup() {
-
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-        inspectionList.add(Inspection())
-
+        for (i in 1..20){
+            inspectionList.add(Inspection())
+        }
         binding.btnGeneratePdfFile onClick {
             lifecycleScope.executeAsyncTask(
                 onPreExecute = {
                     AppProgressDialog.show(dialog!!)
                 },
                 doInBackground = {
-                    GeneratePdfFile(this@MainActivity).createReportFile(100,inspectionList,"Project - 1")
+                    GeneratePdfFile(this@MainActivity).createReportFile(200,inspectionList,"NRK Biz Park",true)
                 },
                 onPostExecute = {
                     AppProgressDialog.hide(dialog!!)
