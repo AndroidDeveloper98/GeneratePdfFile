@@ -16,6 +16,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 class GeneratePdfFile(private val mContext: Context) {
 
@@ -42,13 +43,15 @@ class GeneratePdfFile(private val mContext: Context) {
         }
     }
 
+    var inspectionList : ArrayList<Inspection> = ArrayList()
     @SuppressLint("SimpleDateFormat")
     fun createReportFile(
         cellHeight: Int,
-        inspectionList: ArrayList<Inspection>,
+        list: ArrayList<Inspection>,
         fileName: String,
         isCoverPage: Boolean
     ) {
+        inspectionList.addAll(list)
         val pdfDocument = PdfDocument()
         val itemPerPage = 1000 / cellHeight
         var isCoverPage = isCoverPage
@@ -70,7 +73,9 @@ class GeneratePdfFile(private val mContext: Context) {
             } else {
                 verticallySpace = 80f
                 for (ii in 1..itemPerPage){
-                    generateInspectionCell(canvas,inspectionList[ii])
+                    if (inspectionList.isNotEmpty()){
+                        generateInspectionCell(canvas,inspectionList[0],ii)
+                    }
                 }
             }
             drawFooterText(canvas, "@2022 Inspection Audit")
@@ -97,33 +102,46 @@ class GeneratePdfFile(private val mContext: Context) {
         pdfDocument.close()
     }
 
-    private fun generateInspectionCell(canvas: Canvas,inspection: Inspection) {
+    private fun generateInspectionCell(canvas: Canvas,inspection: Inspection,number : Int) {
         drawBitMapInStart(canvas,60f,BitmapFactory.decodeResource(mContext.resources, R.drawable.ic_dummy),140,160)
         verticallySpace += 12
-        drawInspectionText(canvas,226f,"Inspection #01")
+        drawInspectionText(canvas,226f,"Inspection #0$number")
         verticallySpace += 20
-        drawInspectionText(canvas,226f,"Title Name")
+        drawInspectionText(canvas,226f, inspection.title)
         verticallySpace += 20
         drawInspectionText(canvas,226f,"Location :")
-        drawInspectionText(canvas,326f,"1st Floor")
+        drawInspectionText(canvas,326f,inspection.location)
         verticallySpace += 20
         drawInspectionText(canvas,226f,"Date raised :")
-        drawInspectionText(canvas,326f,"2-jan-2023")
+        drawInspectionText(canvas,326f,inspection.actionDate)
         verticallySpace += 20
         drawInspectionText(canvas,226f,"Action Date :")
-        drawInspectionText(canvas,326f,"2-jan-2023")
+        drawInspectionText(canvas,326f,inspection.actionDate)
         verticallySpace += 20
         drawInspectionText(canvas,226f,"Assign To :")
-        drawInspectionText(canvas,326f,"2-jan-2023")
+        drawInspectionText(canvas,326f,inspection.assignTo)
         verticallySpace += 20
         drawInspectionText(canvas,226f,"Status :")
-        drawInspectionText(canvas,326f,"Closed")
+        drawInspectionText(canvas,326f,inspection.status)
         verticallySpace += 20
         drawInspectionText(canvas,226f,"Description :")
-        drawInspectionText(canvas,326f,"Message")
+        drawInspectionText(canvas,326f,inspection.description)
         verticallySpace += 18
-        canvas.drawLine(24f, verticallySpace, 780f, verticallySpace, paint)
+        val linePaint = Paint().apply{
+            isAntiAlias = true
+            color = Color.BLACK
+            style = Paint.Style.STROKE
+            strokeWidth = 0.01f
+        }
+        canvas.drawLine(24f, verticallySpace, 780f, verticallySpace, linePaint)
         verticallySpace += 18
+        removeItem()
+    }
+
+    private fun removeItem(){
+        if (inspectionList.isNotEmpty()){
+            inspectionList.removeAt(0)
+        }
     }
 
     private fun generateCoverPage(canvas: Canvas) {
