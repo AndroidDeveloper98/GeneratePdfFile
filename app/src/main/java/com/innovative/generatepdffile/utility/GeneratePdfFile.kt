@@ -63,6 +63,7 @@ class GeneratePdfFile(private val mContext: Context) {
             val myPage = pdfDocument.startPage(myPageInfo)
             val canvas = myPage.canvas
             drawPageNumber(canvas, i, pdfPageSize)
+            verticallySpace = 100f
             if (isCoverPage) {
                 generateCoverPage(canvas)
                 isCoverPage = false
@@ -94,7 +95,30 @@ class GeneratePdfFile(private val mContext: Context) {
     }
 
     private fun generateCoverPage(canvas: Canvas) {
-        drawTextInCenter(canvas, "Cover Page")
+        drawTextInCenter(canvas, "NRK Biz Park",18f)
+        verticallySpace += 40
+        drawTextInCenter(canvas, "Vijay Nagar")
+        verticallySpace += 40
+        drawTextInCenter(canvas, "12")
+        verticallySpace += 40
+        drawTextInCenter(canvas, "06-Jan-2023")
+        verticallySpace += 40
+        drawTextInCenter(canvas, "Client Name : Sonu")
+        verticallySpace += 60
+        drawBitMapInCenter(canvas,BitmapFactory.decodeResource(mContext.resources, R.drawable.ic_dummy),100,100)
+        verticallySpace += 140
+        drawTextInCenter(canvas, "IDA")
+        verticallySpace += 60
+        drawBitMapInCenter(canvas,BitmapFactory.decodeResource(mContext.resources, R.drawable.sign),100,100)
+        verticallySpace += 140
+        drawTextInCenter(canvas, "Monu")
+        verticallySpace += 80
+        drawTextInCenter(canvas, "Total #1 Inspection")
+        verticallySpace += 80
+        drawCircleWithText(canvas, (canvas.width / 2).toFloat() - 120,verticallySpace,"1",Color.RED,32f)
+        drawCircleWithText(canvas, (canvas.width / 2).toFloat() - 40,verticallySpace,"1",Color.BLUE,32f)
+        drawCircleWithText(canvas, (canvas.width / 2).toFloat() + 40,verticallySpace,"1",Color.YELLOW,32f)
+        drawCircleWithText(canvas, (canvas.width / 2).toFloat() + 120,verticallySpace,"1",Color.GREEN,32f)
     }
 
     @SuppressLint("SimpleDateFormat")
