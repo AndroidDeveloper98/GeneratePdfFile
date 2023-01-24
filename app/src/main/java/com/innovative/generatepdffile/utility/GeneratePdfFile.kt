@@ -63,12 +63,15 @@ class GeneratePdfFile(private val mContext: Context) {
             val myPage = pdfDocument.startPage(myPageInfo)
             val canvas = myPage.canvas
             drawPageNumber(canvas, i, pdfPageSize)
-            verticallySpace = 100f
             if (isCoverPage) {
+                verticallySpace = 120f
                 generateCoverPage(canvas)
                 isCoverPage = false
             } else {
-                drawTextInCenter(canvas, "Generate PDF")
+                verticallySpace = 80f
+                for (ii in 1..itemPerPage){
+                    generateInspectionCell(canvas,inspectionList[ii])
+                }
             }
             drawFooterText(canvas, "@2022 Inspection Audit")
             pdfDocument.finishPage(myPage)
@@ -92,6 +95,29 @@ class GeneratePdfFile(private val mContext: Context) {
             e.printStackTrace()
         }
         pdfDocument.close()
+    }
+
+    private fun generateInspectionCell(canvas: Canvas,inspection: Inspection) {
+        drawBitMapInStart(canvas,60f,BitmapFactory.decodeResource(mContext.resources, R.drawable.ic_dummy),140,160)
+        verticallySpace += 12
+        drawInspectionText(canvas,226f,"Inspection #01")
+        verticallySpace += 20
+        drawInspectionText(canvas,226f,"Title Name")
+        verticallySpace += 20
+        drawInspectionText(canvas,226f,"Location : 1st Floor")
+        verticallySpace += 20
+        drawInspectionText(canvas,226f,"Date raised : 2-jan-2023")
+        verticallySpace += 20
+        drawInspectionText(canvas,226f,"Action Date : 2-jan-2023")
+        verticallySpace += 20
+        drawInspectionText(canvas,226f,"Assign To : 2-jan-2023")
+        verticallySpace += 20
+        drawInspectionText(canvas,226f,"Status : Closed")
+        verticallySpace += 20
+        drawInspectionText(canvas,226f,"Description : Message")
+        verticallySpace += 18
+        canvas.drawLine(24f, verticallySpace, 780f, verticallySpace, paint)
+        verticallySpace += 18
     }
 
     private fun generateCoverPage(canvas: Canvas) {
@@ -242,6 +268,19 @@ class GeneratePdfFile(private val mContext: Context) {
         paint.textSize = 18f
         paint.color = ContextCompat.getColor(mContext, R.color.black)
         paint.textAlign = Paint.Align.CENTER
+        canvas.drawText(text, startSpace, verticallySpace, paint)
+    }
+
+    private fun drawInspectionText(
+        canvas: Canvas,
+        startSpace: Float,
+        text: String
+
+    ) {
+        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        paint.textSize = 14f
+        paint.color = ContextCompat.getColor(mContext, R.color.black)
+        paint.textAlign = Paint.Align.LEFT
         canvas.drawText(text, startSpace, verticallySpace, paint)
     }
 
