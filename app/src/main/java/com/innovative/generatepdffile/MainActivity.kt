@@ -10,7 +10,6 @@ import com.innovative.generatepdffile.utility.AppProgressDialog
 import com.innovative.generatepdffile.utility.GeneratePdfFile
 import com.innovative.generatepdffile.utility.executeAsyncTask
 import com.innovative.generatepdffile.utility.onClick
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,20 +27,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeSetup() {
-        inspectionList.add(Inspection("Indore","NRK Biz Park", status = "Open", assignTo = "Sanjay"))
-        inspectionList.add(Inspection("Indore","NRK Biz Park", status = "Open", assignTo = "Sonu"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Completed", assignTo = "Ajay"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Open", assignTo = "Sanjay"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Completed", assignTo = "Sonu"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Open", assignTo = "Sanjay"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Open", assignTo = "Sonu"))
         binding.btnGeneratePdfFile onClick {
             lifecycleScope.executeAsyncTask(
                 onPreExecute = {
                     AppProgressDialog.show(dialog!!)
                 },
                 doInBackground = {
-                    GeneratePdfFile(this@MainActivity).createReportFile(200,inspectionList,"NRK Biz Park",true)
+                    generateStaticData()
+                    GeneratePdfFile(this@MainActivity).createReportFile(
+                        200,
+                        inspectionList,
+                        "NRK Biz Park",
+                        true
+                    )
                 },
                 onPostExecute = {
                     AppProgressDialog.hide(dialog!!)
@@ -49,6 +47,23 @@ class MainActivity : AppCompatActivity() {
                 }
             )
         }
+    }
+
+    private fun generateStaticData() {
+        inspectionList.add(
+            Inspection(
+                "Indore",
+                "NRK Biz Park",
+                status = "Open",
+                assignTo = "Sanjay"
+            )
+        )
+        inspectionList.add(Inspection("Indore", "NRK Biz Park", status = "Open", assignTo = "Sonu"))
+        inspectionList.add(Inspection("Indore", "IT Park", status = "Completed", assignTo = "Ajay"))
+        inspectionList.add(Inspection("Indore", "IT Park", status = "Open", assignTo = "Sanjay"))
+        inspectionList.add(Inspection("Indore", "IT Park", status = "Completed", assignTo = "Sonu"))
+        inspectionList.add(Inspection("Indore", "IT Park", status = "Open", assignTo = "Sanjay"))
+        inspectionList.add(Inspection("Indore", "IT Park", status = "Open", assignTo = "Sonu"))
     }
 
     private fun resetDialog() {
