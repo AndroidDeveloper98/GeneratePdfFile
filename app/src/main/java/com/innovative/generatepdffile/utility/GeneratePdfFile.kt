@@ -59,7 +59,7 @@ class GeneratePdfFile(private val mContext: Context) {
     fun createMultiplePagePdfFile() {
         val pdfDocument = PdfDocument()
         for (i in 0..5){
-            val myPageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 0).create()
+            val myPageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, i).create()
             val myPage = pdfDocument.startPage(myPageInfo)
             val canvas = myPage.canvas
             drawTextInCenter(canvas, "Generate PDF")
