@@ -23,6 +23,8 @@ class GeneratePdfFile(private val mContext: Context) {
     private var pageWidth = 792
     private val paint = Paint()
     private var pdfFile : File? = null
+    private var verticallyWidth = 100f
+    private var listVerticallyWidth = 100f
 
     @SuppressLint("SimpleDateFormat")
     fun createPdfFile() {
@@ -30,7 +32,7 @@ class GeneratePdfFile(private val mContext: Context) {
         val myPageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 0).create()
         val myPage = pdfDocument.startPage(myPageInfo)
         val canvas = myPage.canvas
-        drawText(canvas, "Generate PDF")
+        drawTextInCenter(canvas, "Generate PDF")
         pdfDocument.finishPage(myPage)
         val formattedDate = SimpleDateFormat("dd-MM-yyyy HH_mm_ss")
         val date = Date()
@@ -53,7 +55,38 @@ class GeneratePdfFile(private val mContext: Context) {
         pdfDocument.close()
     }
 
-    private fun drawText(
+    @SuppressLint("SimpleDateFormat")
+    fun createMultiplePagePdfFile() {
+        val pdfDocument = PdfDocument()
+        for (i in 0..5){
+            val myPageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 0).create()
+            val myPage = pdfDocument.startPage(myPageInfo)
+            val canvas = myPage.canvas
+            drawTextInCenter(canvas, "Generate PDF")
+            pdfDocument.finishPage(myPage)
+        }
+        val formattedDate = SimpleDateFormat("dd-MM-yyyy HH_mm_ss")
+        val date = Date()
+        val fileNameWithDate = formattedDate.format(date)
+        val file = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+            "ReportFile - $fileNameWithDate.pdf"
+        )
+        try {
+            pdfDocument.writeTo(FileOutputStream(file))
+            pdfFile = file
+            val u = FileProvider.getUriForFile(mContext, mContext.applicationInfo.packageName, file)
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = u
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            mContext.startActivity(intent)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        pdfDocument.close()
+    }
+
+    private fun drawTextInCenter(
         canvas: Canvas,
         text: String
     ) {
@@ -61,7 +94,7 @@ class GeneratePdfFile(private val mContext: Context) {
         paint.textSize = 18f
         paint.color = ContextCompat.getColor(mContext, R.color.black)
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText(text, (canvas.width / 2).toFloat(), 100f, paint)
+        canvas.drawText(text, (canvas.width / 2).toFloat(), verticallyWidth, paint)
     }
 
 }

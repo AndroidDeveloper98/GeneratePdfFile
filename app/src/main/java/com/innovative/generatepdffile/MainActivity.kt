@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                     AppProgressDialog.show(dialog!!)
                 },
                 doInBackground = {
-                    GeneratePdfFile(this@MainActivity).createPdfFile()
+                    GeneratePdfFile(this@MainActivity).createMultiplePagePdfFile()
                 },
                 onPostExecute = {
                     AppProgressDialog.hide(dialog!!)
