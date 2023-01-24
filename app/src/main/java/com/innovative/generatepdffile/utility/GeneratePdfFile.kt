@@ -104,17 +104,23 @@ class GeneratePdfFile(private val mContext: Context) {
         verticallySpace += 20
         drawInspectionText(canvas,226f,"Title Name")
         verticallySpace += 20
-        drawInspectionText(canvas,226f,"Location : 1st Floor")
+        drawInspectionText(canvas,226f,"Location :")
+        drawInspectionText(canvas,326f,"1st Floor")
         verticallySpace += 20
-        drawInspectionText(canvas,226f,"Date raised : 2-jan-2023")
+        drawInspectionText(canvas,226f,"Date raised :")
+        drawInspectionText(canvas,326f,"2-jan-2023")
         verticallySpace += 20
-        drawInspectionText(canvas,226f,"Action Date : 2-jan-2023")
+        drawInspectionText(canvas,226f,"Action Date :")
+        drawInspectionText(canvas,326f,"2-jan-2023")
         verticallySpace += 20
-        drawInspectionText(canvas,226f,"Assign To : 2-jan-2023")
+        drawInspectionText(canvas,226f,"Assign To :")
+        drawInspectionText(canvas,326f,"2-jan-2023")
         verticallySpace += 20
-        drawInspectionText(canvas,226f,"Status : Closed")
+        drawInspectionText(canvas,226f,"Status :")
+        drawInspectionText(canvas,326f,"Closed")
         verticallySpace += 20
-        drawInspectionText(canvas,226f,"Description : Message")
+        drawInspectionText(canvas,226f,"Description :")
+        drawInspectionText(canvas,326f,"Message")
         verticallySpace += 18
         canvas.drawLine(24f, verticallySpace, 780f, verticallySpace, paint)
         verticallySpace += 18
