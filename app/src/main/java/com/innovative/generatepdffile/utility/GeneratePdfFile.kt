@@ -25,7 +25,6 @@ class GeneratePdfFile(private val mContext: Context) {
     private val paint = Paint()
     private var pdfFile: File? = null
     private var verticallySpace = 100f
-    private var listVerticallyWidth = 100f
 
     private fun getPdfPages(itemPerPage: Int, listSize: Int): Int {
         return if (listSize > itemPerPage) {

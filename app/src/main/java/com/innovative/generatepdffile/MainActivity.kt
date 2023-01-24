@@ -28,13 +28,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeSetup() {
-        inspectionList.add(Inspection("Indore","NRK Biz Park", status = "Open"))
-        inspectionList.add(Inspection("Indore","NRK Biz Park", status = "Open"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Completed"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Open"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Completed"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Open"))
-        inspectionList.add(Inspection("Indore","IT Park", status = "Open"))
+        inspectionList.add(Inspection("Indore","NRK Biz Park", status = "Open", assignTo = "Sanjay"))
+        inspectionList.add(Inspection("Indore","NRK Biz Park", status = "Open", assignTo = "Sonu"))
+        inspectionList.add(Inspection("Indore","IT Park", status = "Completed", assignTo = "Ajay"))
+        inspectionList.add(Inspection("Indore","IT Park", status = "Open", assignTo = "Sanjay"))
+        inspectionList.add(Inspection("Indore","IT Park", status = "Completed", assignTo = "Sonu"))
+        inspectionList.add(Inspection("Indore","IT Park", status = "Open", assignTo = "Sanjay"))
+        inspectionList.add(Inspection("Indore","IT Park", status = "Open", assignTo = "Sonu"))
         binding.btnGeneratePdfFile onClick {
             lifecycleScope.executeAsyncTask(
                 onPreExecute = {
